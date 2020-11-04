@@ -1787,6 +1787,28 @@ describe('network stubbing', { retries: 2 }, function () {
       })
     })
 
+    // @see https://github.com/cypress-io/cypress/issues/8999
+    it('can spy on a 204 no body response', function () {
+      cy.route2('/status-code').as('status')
+      .then(() => {
+        $.get('/status-code?code=204')
+      })
+      .wait('@status').its('response.statusCode').should('eq', 204)
+    })
+
+    // @see https://github.com/cypress-io/cypress/issues/8934
+    it('can spy on a 304 not modified image response', function () {
+      const url = `/fixtures/media/cypress.png?i=${Date.now()}`
+
+      cy.route2(url).as('image')
+      .then(() => {
+        $.get({ url, cache: true })
+        $.get({ url, cache: true })
+      })
+      .wait('@image').its('response.statusCode').should('eq', 200)
+      .wait('@image').its('response.statusCode').should('eq', 304)
+    })
+
     context('with an intercepted request', function () {
       it('can dynamically alias the request', function () {
         cy.route2('/foo', (req) => {

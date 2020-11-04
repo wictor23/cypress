@@ -1,8 +1,11 @@
 import _ from 'lodash'
-import concatStream from 'concat-stream'
 import Debug from 'debug'
 import { Readable } from 'stream'
 
+import {
+  concatStream,
+  httpUtils,
+} from '@packages/network'
 import {
   ResponseMiddleware,
 } from '@packages/proxy'
@@ -65,10 +68,17 @@ export const InterceptResponse: ResponseMiddleware = function () {
 
   this.makeResStreamPlainText()
 
-  this.incomingResStream.pipe(concatStream((resBody) => {
-    res.body = resBody.toString()
+  if (httpUtils.responseMustHaveEmptyBody(this.req, this.incomingRes)) {
+    res.body = ''
     emitReceived()
-  }))
+  } else {
+    this.incomingResStream.pipe(concatStream((resBody) => {
+      res.body = resBody.toString()
+      emitReceived()
+    }))
+  }
+
+  this.incomingResStream.resume()
 
   if (!backendRequest.waitForResponseContinue) {
     this.next()

@@ -1,9 +1,9 @@
 import _ from 'lodash'
-import concatStream from 'concat-stream'
 import Debug from 'debug'
 import minimatch from 'minimatch'
 import url from 'url'
 
+import { concatStream } from '@packages/network'
 import {
   CypressIncomingRequest,
   RequestMiddleware,

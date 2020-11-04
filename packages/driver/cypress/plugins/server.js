@@ -52,6 +52,10 @@ const createApp = (port) => {
     res.end()
   })
 
+  app.get('/status-code', (req, res) => {
+    res.sendStatus(req.query.code || 200)
+  })
+
   // allows us to serve the testrunner into an iframe for testing
   app.use('/isolated-runner', express.static(path.join(__dirname, '../../../runner/dist')))
 
