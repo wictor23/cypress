@@ -28,7 +28,7 @@
     "debug": "4.1.1",
     "find-up": "5.0.0",
     "find-webpack": "2.1.0",
-    "inquirer": "7.3.3",
+    "inquirer": "8.2.7",
     "mime-types": "2.1.26",
     "semver": "7.3.2",
     "unfetch": "4.1.0"
